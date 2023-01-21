@@ -1,101 +1,77 @@
 import * as React from "react";
-import { RadioButton } from "react-native-paper";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import axios from "axios";
 
-import { colors } from "./constants/colors";
-import { validatePesel } from "./utils/functions";
+import { ImageSelect } from "./src/components/ImageSelect/ImageSelect";
+import { PersonalId } from "./src/components/PersonalId/PersonalId";
+import { FullName } from "./src/components/FullName/FullName";
+import { UserType } from "./src/components/UserType/UserType";
 
-interface personalId {
-  value: string;
-  error: boolean;
+import { appStyles } from "./App.styles";
+
+export interface fileType {
+  uri: string;
 }
 
-export const App = () => {
+export interface errorsType {
+  photo: string;
+  personalId: string;
+}
+
+export const App: React.FC = (): JSX.Element => {
   const [name, setName] = React.useState<string>("");
   const [surname, setSurname] = React.useState<string>("");
   const [isPerson, setIsPerson] = React.useState<boolean>(true);
+  const [image, setImage] = React.useState<fileType | null>(null);
+  const [personalID, setPersonalId] = React.useState<string>("");
 
-  const [personalID, setPersonalId] = React.useState<personalId>({
-    value: "",
-    error: false,
-  });
+  const handleCancel = () => {
+    setName("");
+    setSurname("");
+    setIsPerson(true);
+    setImage(null);
+    setPersonalId("");
+  };
 
-  const handleChangePersonalId = (e: string) => {
-    setPersonalId((prev) => {
-      return { ...prev, value: e };
-    });
-
-    if (validatePesel(personalID.value))
-      setPersonalId((prev) => {
-        return { ...prev, error: true };
+  const handleSave = () => {
+    axios
+      .post("https://localhost:60001/Contractor/Save", {
+        name: name,
+        surname: surname,
+        isPerson: isPerson,
+        image: image,
+        personalID: personalID,
+      })
+      .then((response) => {
+        console.log(response);
       });
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={setName}
-        value={name}
-        placeholder="Type your name"
-        placeholderTextColor={colors.GRAY}
+    <View style={appStyles.container}>
+      <FullName
+        name={name}
+        setName={setName}
+        surname={surname}
+        setSurname={setSurname}
       />
-      <TextInput
-        style={styles.input}
-        onChangeText={setSurname}
-        value={surname}
-        placeholder="Type your surname"
-        placeholderTextColor={colors.GRAY}
+      <UserType isPerson={isPerson} setIsPerson={setIsPerson} />
+      <PersonalId
+        personalID={personalID}
+        setPersonalId={setPersonalId}
+        isPerson={isPerson}
       />
-      <View>
-        <View style={styles.radioContainer}>
-          <Text>Person</Text>
-          <RadioButton
-            value="Person"
-            status={isPerson ? "checked" : "unchecked"}
-            onPress={setIsPerson.bind(this, true)}
-          />
-        </View>
-        <View style={styles.radioContainer}>
-          <Text>Company</Text>
-          <RadioButton
-            value="Company"
-            status={!isPerson ? "checked" : "unchecked"}
-            onPress={setIsPerson.bind(this, false)}
-          />
-        </View>
+      <ImageSelect image={image} setImage={setImage} />
+      <View style={appStyles.buttonsContainer}>
+        <Pressable style={appStyles.button} onPress={handleCancel}>
+          <Text>Cancel</Text>
+        </Pressable>
+        <Pressable style={appStyles.button} onPress={handleSave}>
+          <Text>Save</Text>
+        </Pressable>
       </View>
-      <TextInput
-        style={styles.input}
-        onChangeText={handleChangePersonalId}
-        value={personalID.value}
-        placeholder="Type your NIP or PESEL"
-        keyboardType="numeric"
-        placeholderTextColor={colors.GRAY}
-      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.SOFT_WHITE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  input: {
-    height: 40,
-    margin: 8,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-  },
-  radioContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-});
 
 export default App;

@@ -15,6 +15,7 @@ export const validatePesel = (pesel: string): boolean => {
   }
 
   const times = [1, 3, 7, 9];
+
   const digits = `${pesel}`.split(``).map((digit) => {
     return parseInt(digit, 10);
   });
@@ -29,11 +30,7 @@ export const validatePesel = (pesel: string): boolean => {
   return 10 - (control === 0 ? 10 : control) === dig11;
 };
 
-const validateNip = (nip: string): boolean => {
-  if (typeof nip !== `string`) {
-    return false;
-  }
-
+export const validateNip = (nip: string): boolean => {
   const nipWithoutDashes = nip.replace(/-/gu, ``);
   const reg = /^[0-9]{10}$/u;
   if (!reg.test(nipWithoutDashes)) {
