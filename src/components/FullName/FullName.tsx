@@ -1,5 +1,6 @@
 import React from "react";
 import { TextInput } from "react-native";
+
 import { colors } from "../../constants/colors";
 import { fullNameStyles } from "./FullName.styles";
 

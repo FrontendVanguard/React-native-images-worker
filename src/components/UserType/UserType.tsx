@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { RadioButton } from "react-native-paper";
+
 import { userTypeStyles } from "./UserType.styles";
 
 interface UserTypeProps {

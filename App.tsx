@@ -59,13 +59,10 @@ export const App: React.FC = (): JSX.Element => {
           Alert.alert("Error", "This endpoint not found");
         });
     else {
-      Alert.alert("Error", "Please choose any image");
+      Alert.alert("Warning", "Please complete form");
     }
   };
 
-  React.useEffect(() => {
-    Alert.alert("Error", errors.photo);
-  }, [errors.photo]);
   return (
     <View style={appStyles.container}>
       <FullName
