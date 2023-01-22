@@ -14,7 +14,7 @@ export const FullName: React.FC<fullNameProps> = ({
   setName,
   surname,
   setSurname,
-}): JSX.Element => {
+}) => {
   return (
     <>
       <TextInput

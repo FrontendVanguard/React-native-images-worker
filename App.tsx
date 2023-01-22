@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 import axios from "axios";
 
 import { ImageSelect } from "./src/components/ImageSelect/ImageSelect";
@@ -25,28 +25,47 @@ export const App: React.FC = (): JSX.Element => {
   const [image, setImage] = React.useState<fileType | null>(null);
   const [personalID, setPersonalId] = React.useState<string>("");
 
+  const [errors, setErrors] = React.useState<errorsType>({
+    photo: "",
+    personalId: "",
+  });
+
   const handleCancel = () => {
     setName("");
     setSurname("");
     setIsPerson(true);
     setImage(null);
     setPersonalId("");
+    setErrors({
+      photo: "",
+      personalId: "",
+    });
   };
 
   const handleSave = () => {
-    axios
-      .post("https://localhost:60001/Contractor/Save", {
-        name: name,
-        surname: surname,
-        isPerson: isPerson,
-        image: image,
-        personalID: personalID,
-      })
-      .then((response) => {
-        console.log(response);
-      });
+    if (name && surname && image?.uri && !errors.photo && !errors.personalId)
+      axios
+        .post("https://localhost:60001/Contractor/Save", {
+          name: name,
+          surname: surname,
+          isPerson: isPerson,
+          image: image,
+          personalID: personalID,
+        })
+        .then((response) => {
+          Alert.alert("Response", response.data);
+        })
+        .catch((error) => {
+          Alert.alert("Error", "This endpoint not found");
+        });
+    else {
+      Alert.alert("Error", "Please choose any image");
+    }
   };
 
+  React.useEffect(() => {
+    Alert.alert("Error", errors.photo);
+  }, [errors.photo]);
   return (
     <View style={appStyles.container}>
       <FullName
@@ -60,8 +79,15 @@ export const App: React.FC = (): JSX.Element => {
         personalID={personalID}
         setPersonalId={setPersonalId}
         isPerson={isPerson}
+        errors={errors}
+        setErrors={setErrors}
       />
-      <ImageSelect image={image} setImage={setImage} />
+      <ImageSelect
+        image={image}
+        setImage={setImage}
+        errors={errors}
+        setErrors={setErrors}
+      />
       <View style={appStyles.buttonsContainer}>
         <Pressable style={appStyles.button} onPress={handleCancel}>
           <Text>Cancel</Text>

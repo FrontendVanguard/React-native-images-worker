@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../constants/colors";
 
 export const personalIdStyles = StyleSheet.create({
   input: {
@@ -6,11 +7,11 @@ export const personalIdStyles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
+    marginBottom: 16,
   },
 
   errorText: {
-    alignSelf: "center",
     marginTop: -8,
-    color: "red",
+    color: colors.RED,
   },
 });

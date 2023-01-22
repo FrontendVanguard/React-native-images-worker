@@ -50,9 +50,5 @@ export const validateNip = (nip: string): boolean => {
 
   const control = sum % 11;
 
-  if (parseInt(dig[9] as string, 10) === control) {
-    return true;
-  }
-
-  return false;
+  return parseInt(dig[9] as string, 10) === control;
 };

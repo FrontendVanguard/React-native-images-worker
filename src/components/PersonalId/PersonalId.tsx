@@ -10,22 +10,28 @@ interface PersonalIdProps {
   personalID: string;
   setPersonalId: React.Dispatch<React.SetStateAction<string>>;
   isPerson: boolean;
+  errors: errorsType;
+  setErrors: React.Dispatch<React.SetStateAction<errorsType>>;
 }
 
 export const PersonalId: React.FC<PersonalIdProps> = ({
   personalID,
   isPerson,
   setPersonalId,
-}): JSX.Element => {
-  const [error, setError] = React.useState<string>("");
-
+  errors,
+  setErrors,
+}) => {
   const handleChangePersonalId = (e: string) => {
     setPersonalId(e.trim());
 
     if (isPerson ? !validatePesel(e) : !validateNip(e)) {
-      setError(`${isPerson ? "PESEL" : "NIP"} is incorrect`);
+      setErrors((prev) => {
+        return { ...prev, personalId: "Personal ID is incorrect" };
+      });
     } else {
-      setError("");
+      setErrors((prev) => {
+        return { ...prev, personalId: "" };
+      });
     }
   };
 
@@ -34,7 +40,7 @@ export const PersonalId: React.FC<PersonalIdProps> = ({
       <TextInput
         style={{
           ...personalIdStyles.input,
-          borderColor: !!error ? "red" : "gray",
+          borderColor: !!errors.personalId ? colors.RED : colors.GRAY,
         }}
         onChangeText={handleChangePersonalId}
         value={personalID}
@@ -42,7 +48,9 @@ export const PersonalId: React.FC<PersonalIdProps> = ({
         keyboardType="numeric"
         placeholderTextColor={colors.GRAY}
       />
-      {!!error && <Text style={personalIdStyles.errorText}>{error}</Text>}
+      {!!errors.personalId && (
+        <Text style={personalIdStyles.errorText}>{errors.personalId}</Text>
+      )}
     </>
   );
 };

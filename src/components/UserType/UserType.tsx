@@ -11,7 +11,7 @@ interface UserTypeProps {
 export const UserType: React.FC<UserTypeProps> = ({
   isPerson,
   setIsPerson,
-}): JSX.Element => {
+}) => {
   return (
     <View>
       <View style={userTypeStyles.radioContainer}>
